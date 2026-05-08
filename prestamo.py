@@ -1,6 +1,7 @@
 from datetime import date, timedelta
 
 from excepciones import (
+    DatosInvalidosError,
     PrestamoYaDevueltoError,
     RecursoNoDisponibleError,
     UsuarioConMultasError,
@@ -100,9 +101,17 @@ class Prestamo:
     def fecha_devolucion_esperada(self) -> date:
         return self._fecha_devolucion_esperada
 
+    @fecha_devolucion_esperada.setter
+    def fecha_devolucion_esperada(self, valor: date) -> None:
+        if not isinstance(valor, date):
+            raise DatosInvalidosError(
+                "fecha_devolucion_esperada debe ser un objeto date."
+            )
+        self._fecha_devolucion_esperada = valor
+
     @property
     def fecha_devolucion_real(self) -> date:
-        return self._fecha_devolucion_real
+        return self._fecha_devolucion_real # type: ignore
 
     @property
     def devuelto(self) -> bool:

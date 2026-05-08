@@ -40,4 +40,4 @@ class GestorPrestamos:
         for p in self._prestamos:
             if p.identificador == prestamo_id:
                 return p
-        return None
+        return None # type: ignore
