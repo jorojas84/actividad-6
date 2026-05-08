@@ -1,27 +1,17 @@
-"""Servicio de notificaciones del sistema de biblioteca.
-
-Define una clase abstracta ServicioNotificaciones y dos implementaciones
-concretas: NotificacionEmail y NotificacionSMS. Las notificaciones son
-simuladas (imprimen en consola) para no requerir configuracion externa.
-"""
-
 from abc import ABC, abstractmethod
+from datetime import date
+from typing import List
 
+from gestor_prestamos import GestorPrestamos
+from prestamo import Prestamo
 from usuario import Usuario
 
 
 class ServicioNotificaciones(ABC):
-    """Clase base abstracta para cualquier canal de notificaciones."""
 
     @abstractmethod
     def notificar(self, usuario: Usuario, mensaje: str) -> None:
-        """Envia una notificacion al usuario por el canal correspondiente.
-
-        Args:
-            usuario: Usuario destinatario.
-            mensaje: Contenido de la notificacion.
-        """
-
+        pass
 
 class NotificacionEmail(ServicioNotificaciones):
     """Servicio simulado de notificaciones por correo electronico."""
@@ -43,7 +33,29 @@ class RouterNotificaciones:
             "sms": NotificacionSMS(),
         }
     
-    def notificar(self, usuario, mensaje):
+    def notificar(self, usuario: Usuario, mensaje: str) -> None:
         canal = usuario.canal_notificacion       # mira la preferencia
         servicio = self._servicios[canal]        # escoge el servicio
         servicio.notificar(usuario, mensaje)     # delega la notificacion
+
+class ServicioRecordatorios:
+    def __init__(
+        self,gestor_prestamos: GestorPrestamos,
+        router: RouterNotificaciones,) -> None:
+        self._gestor_prestamos = gestor_prestamos
+        self._router = router
+
+    def revisar_y_notificar(self) -> List[Prestamo]:
+        hoy = date.today()
+        por_vencer: List[Prestamo] = []
+
+        for prestamo in self._gestor_prestamos.prestamos_activos():
+            if prestamo.fecha_devolucion_esperada == hoy:
+                self._router.notificar(
+                    prestamo.usuario,
+                    f"Recordatorio: hoy vence la devolucion del recurso "
+                    f"'{prestamo.recurso.titulo}'. Por favor devuelvalo hoy."
+                )
+                por_vencer.append(prestamo)
+
+        return por_vencer
