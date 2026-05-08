@@ -15,6 +15,9 @@ MULTA_DIARIA_AUDIOLIBRO = 1500
 
 
 class Recurso(ABC):
+    DIAS_PRESTAMO = 0  # Se define en subclases
+    MULTA_DIARIA = 0   # Se define en subclases
+    
     def __init__(self, codigo: str, titulo: str, autor: str) -> None:
         if not codigo or not codigo.strip():
             raise DatosInvalidosError("El codigo no puede estar vacio.")
@@ -23,24 +26,10 @@ class Recurso(ABC):
         if not autor or not autor.strip():
             raise DatosInvalidosError("El autor no puede estar vacio.")
 
-        self.codigo = codigo.strip()
-        self.titulo = titulo.strip()
-        self.autor = autor.strip()
-        self.disponible = True
-
-    # De acuerdo a la variable de clase, cada tipo de recurso tiene una tarifa de multa diaria diferente
-    @abstractmethod
-    def calcular_multa(self, dias_retraso: int) -> float:
-        """Calcula la multa segun los dias de retraso.
-
-        Cada subclase implementa su propia tarifa diaria.
-
-        Args:
-            dias_retraso: Numero de dias de retraso (debe ser >= 0).
-
-        Returns:
-            Valor de la multa en pesos colombianos.
-        """
+        self._codigo = codigo.strip()
+        self._titulo = titulo.strip()
+        self._autor = autor.strip()
+        self._disponible = True
 
     @abstractmethod
     def dias_prestamo_permitido(self) -> int:
@@ -50,44 +39,68 @@ class Recurso(ABC):
         """Convertir diccionario para guardarlo en JSON."""
         return {
             "tipo": self.__class__.__name__,
-            "codigo": self.codigo,
-            "titulo": self.titulo,
-            "autor": self.autor,
-            "disponible": self.disponible,
+            "codigo": self._codigo,
+            "titulo": self._titulo,
+            "autor": self._autor,
+            "disponible": self._disponible,
         }
 
     def __str__(self) -> str:
-        estado = "disponible" if self.disponible else "prestado"
-        return f"[{self.codigo}] {self.titulo} - {self.autor} ({estado})"
+        estado = "disponible" if self._disponible else "prestado"
+        return f"[{self._codigo}] {self._titulo} - {self._autor} ({estado})"
+    
+    @property
+    def codigo(self) -> str:
+        return self._codigo
+
+    @property
+    def titulo(self) -> str:
+        return self._titulo
+
+    @property
+    def autor(self) -> str:
+        return self._autor
+
+    @property
+    def disponible(self) -> bool:
+        return self._disponible
+
+    @disponible.setter
+    def disponible(self, valor: bool) -> None:
+        if not isinstance(valor, bool):
+            raise DatosInvalidosError("disponible debe ser True o False.")
+        self._disponible = valor
 
 
 class Libro(Recurso):
+    DIAS_PRESTAMO = DIAS_PRESTAMO_LIBRO
+    MULTA_DIARIA = MULTA_DIARIA_LIBRO
+
     def __init__(self,codigo: str, titulo: str, autor: str, paginas: int,) -> None:
         super().__init__(codigo, titulo, autor)
         
+
         if not isinstance(paginas, int) or paginas <= 0:
             raise DatosInvalidosError(
                 "El numero de paginas debe ser un entero positivo."
             )
         
-        self.paginas = paginas
-
-    def calcular_multa(self, dias_retraso: int) -> float:
-        if dias_retraso < 0:
-            raise DatosInvalidosError(
-                "Los dias de retraso no pueden ser negativos.")
-        return float(dias_retraso * MULTA_DIARIA_LIBRO)
+        self._paginas = paginas
+        
 
     def dias_prestamo_permitido(self) -> int:
         return DIAS_PRESTAMO_LIBRO
 
     def to_dict(self) -> dict:
         datos = super().to_dict()
-        datos["paginas"] = self.paginas
+        datos["paginas"] = self._paginas
         return datos
 
 
 class Revista(Recurso):
+    DIAS_PRESTAMO = DIAS_PRESTAMO_REVISTA
+    MULTA_DIARIA = MULTA_DIARIA_REVISTA
+
     def __init__(self,codigo: str, titulo: str, 
                  autor: str, numero_edicion: int,) -> None:
         super().__init__(codigo, titulo, autor)
@@ -97,23 +110,20 @@ class Revista(Recurso):
                 "El numero de edicion debe ser un entero positivo."
             )
         
-        self.numero_edicion = numero_edicion
-
-    def calcular_multa(self, dias_retraso: int) -> float:
-        if dias_retraso < 0:
-            raise DatosInvalidosError("Los dias de retraso no pueden ser negativos.")
-        return float(dias_retraso * MULTA_DIARIA_REVISTA)
+        self._numero_edicion = numero_edicion
 
     def dias_prestamo_permitido(self) -> int:
         return DIAS_PRESTAMO_REVISTA
 
     def to_dict(self) -> dict:
         datos = super().to_dict()
-        datos["numero_edicion"] = self.numero_edicion
+        datos["numero_edicion"] = self._numero_edicion
         return datos
 
 
 class AudioLibro(Recurso):
+    DIAS_PRESTAMO = DIAS_PRESTAMO_AUDIOLIBRO
+    MULTA_DIARIA = MULTA_DIARIA_AUDIOLIBRO
 
     def __init__(self,codigo: str,titulo: str,
                  autor: str,duracion_minutos: int,) -> None:
@@ -124,17 +134,12 @@ class AudioLibro(Recurso):
                 "La duracion debe ser un entero positivo en minutos."
             )
         
-        self.duracion_minutos = duracion_minutos
-
-    def calcular_multa(self, dias_retraso: int) -> float:
-        if dias_retraso < 0:
-            raise DatosInvalidosError("Los dias de retraso no pueden ser negativos.")
-        return float(dias_retraso * MULTA_DIARIA_AUDIOLIBRO)
+        self._duracion_minutos = duracion_minutos
 
     def dias_prestamo_permitido(self) -> int:
         return DIAS_PRESTAMO_AUDIOLIBRO
 
     def to_dict(self) -> dict:
         datos = super().to_dict()
-        datos["duracion_minutos"] = self.duracion_minutos
+        datos["duracion_minutos"] = self._duracion_minutos
         return datos

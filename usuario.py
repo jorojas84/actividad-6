@@ -3,7 +3,7 @@ from abc import ABC
 from excepciones import DatosInvalidosError
 
 FACTOR_EXTENSION_ESTUDIANTE = 1.0
-TIPOS_DOCENTE = {"De Planta": 2.0, "Catedratico": 0.5}
+TIPOS_DOCENTE_Y_FACTOR = {"De Planta": 2.0, "Catedratico": 0.5}
 
 class Usuario(ABC):
     def __init__(self,identificacion: str, nombre: str, 
@@ -22,8 +22,8 @@ class Usuario(ABC):
         self._nombre = nombre.strip()
         self._email = email.strip()
         self._telefono = telefono.strip()
-        self._multas_pendientes = 0.0
-        self._factor_extension = None  # Se asigna en subclases
+        self._multa_pendiente = 0.0
+        self._factor_extension = 0.0  # Se asigna en subclases
 
     def to_dict(self) -> dict:
         return {
@@ -32,12 +32,42 @@ class Usuario(ABC):
             "nombre": self._nombre,
             "email": self._email,
             "telefono": self._telefono,
-            "multas_pendientes": self._multas_pendientes,
+            "multas_pendientes": self._multa_pendiente,
         }
 
     def __str__(self) -> str:
         return f"[{self._identificacion}] {self._nombre} ({self._email})"
 
+    @property
+    def identificacion(self) -> str:
+        return self._identificacion
+
+    @property
+    def nombre(self) -> str:
+        return self._nombre
+
+    @property
+    def email(self) -> str:
+        return self._email
+
+    @property
+    def telefono(self) -> str:
+        return self._telefono
+
+    @property
+    def multas_pendientes(self) -> float:
+        return self._multa_pendiente
+    
+    @property
+    def factor_extension(self) -> float:
+        return self._factor_extension
+    
+    @multas_pendientes.setter
+    def multas_pendientes(self, valor: float) -> None:
+        if valor < 0:
+            raise DatosInvalidosError("Las multas no pueden ser negativas.")
+        self._multa_pendiente = valor
+    
 
 class Estudiante(Usuario):
     def __init__(self,identificacion: str, nombre: str, 
