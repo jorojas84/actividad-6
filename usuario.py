@@ -79,7 +79,7 @@ class Usuario(ABC):
 
 class Estudiante(Usuario):
     def __init__(self,identificacion: str, nombre: str, 
-                 email: str, codigo: str,carrera: str,telefono: str, canal_notificacion: str) -> None:
+                 email: str,telefono: str,codigo: str,carrera: str, canal_notificacion: str) -> None:
         super().__init__(identificacion, nombre, email, telefono, canal_notificacion)
 
         if not codigo or not codigo.strip():
@@ -91,7 +91,6 @@ class Estudiante(Usuario):
         self._codigo = codigo.strip()
         self._carrera = carrera.strip()
         self._factor_extension = FACTOR_EXTENSION_ESTUDIANTE
-        self._canal_notificacion = canal_notificacion
 
     def to_dict(self) -> dict:
         datos = super().to_dict()

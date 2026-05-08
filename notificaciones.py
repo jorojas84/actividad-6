@@ -1,10 +1,29 @@
 from abc import ABC, abstractmethod
-from datetime import date
+from datetime import date, datetime
 from typing import List
 
 from gestor_prestamos import GestorPrestamos
 from prestamo import Prestamo
 from usuario import Usuario
+
+
+class Notificacion:
+    def __init__(self, identificador: str, usuario_id: str, canal: str,
+                 mensaje: str, fecha: datetime) -> None:
+        self._identificador = identificador
+        self._usuario_id = usuario_id
+        self._canal = canal
+        self._mensaje = mensaje
+        self._fecha = fecha
+
+    def to_dict(self) -> dict:
+        return {
+            "identificador": self._identificador,
+            "usuario_id": self._usuario_id,
+            "canal": self._canal,
+            "mensaje": self._mensaje,
+            "fecha": self._fecha.isoformat(),
+        }
 
 
 class ServicioNotificaciones(ABC):
@@ -32,16 +51,29 @@ class RouterNotificaciones:
             "email": NotificacionEmail(),
             "sms": NotificacionSMS(),
         }
-    
+        self._historial: List[Notificacion] = []
+        self._contador = 0
+
     def notificar(self, usuario: Usuario, mensaje: str) -> None:
         canal = usuario.canal_notificacion       # mira la preferencia
         servicio = self._servicios[canal]        # escoge el servicio
         servicio.notificar(usuario, mensaje)     # delega la notificacion
 
-class ServicioRecordatorios:
-    def __init__(
-        self,gestor_prestamos: GestorPrestamos,
-        router: RouterNotificaciones,) -> None:
+        self._contador += 1
+        self._historial.append(Notificacion(
+            identificador=f"N{self._contador:04d}",
+            usuario_id=usuario.identificacion,
+            canal=canal,
+            mensaje=mensaje,
+            fecha=datetime.now(),
+        ))
+
+    def historial(self) -> List[Notificacion]:
+        return list(self._historial)
+
+class RecordatorioVenceHoy:
+    def __init__(self,gestor_prestamos: GestorPrestamos,
+                 router: RouterNotificaciones,) -> None:
         self._gestor_prestamos = gestor_prestamos
         self._router = router
 

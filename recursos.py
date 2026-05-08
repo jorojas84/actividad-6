@@ -76,7 +76,8 @@ class Libro(Recurso):
     DIAS_PRESTAMO = DIAS_PRESTAMO_LIBRO
     MULTA_DIARIA = MULTA_DIARIA_LIBRO
 
-    def __init__(self,codigo: str, titulo: str, autor: str, paginas: int,) -> None:
+    def __init__(self,codigo: str, titulo: str, 
+                 autor: str, paginas: int) -> None:
         super().__init__(codigo, titulo, autor)
         
 

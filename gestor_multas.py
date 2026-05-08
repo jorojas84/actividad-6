@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 
 from excepciones import DatosInvalidosError
 from multa import Multa
@@ -20,7 +20,7 @@ class GestorMultas:
         return float(recurso.MULTA_DIARIA * dias_retraso)
 
     def generar_multa(self,usuario: Usuario,recurso: Recurso,
-        prestamo_id: str,dias_retraso: int,) -> Multa:
+        prestamo_id: str,dias_retraso: int,) -> Optional[Multa]:
         
         valor = self.calcular_valor(recurso, dias_retraso)
         if valor == 0:
