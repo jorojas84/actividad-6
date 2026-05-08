@@ -1,0 +1,34 @@
+[
+  {
+    "tipo": "Libro",
+    "codigo": "L001",
+    "titulo": "Cien anos de soledad",
+    "autor": "Gabriel Garcia Marquez",
+    "disponible": true,
+    "paginas": 432
+  },
+  {
+    "tipo": "Libro",
+    "codigo": "L002",
+    "titulo": "El Quijote",
+    "autor": "Miguel de Cervantes",
+    "disponible": true,
+    "paginas": 863
+  },
+  {
+    "tipo": "Revista",
+    "codigo": "R001",
+    "titulo": "National Geographic",
+    "autor": "Varios",
+    "disponible": false,
+    "numero_edicion": 250
+  },
+  {
+    "tipo": "AudioLibro",
+    "codigo": "A001",
+    "titulo": "1984",
+    "autor": "George Orwell",
+    "disponible": false,
+    "duracion_minutos": 660
+  }
+]

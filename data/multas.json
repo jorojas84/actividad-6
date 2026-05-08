@@ -1,0 +1,9 @@
+[
+  {
+    "identificador": "M0001",
+    "usuario_id": "1001",
+    "prestamo_id": "P0001",
+    "valor": 5000.0,
+    "fecha_generacion": "2026-05-08"
+  }
+]
