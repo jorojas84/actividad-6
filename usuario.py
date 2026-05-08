@@ -7,7 +7,7 @@ TIPOS_DOCENTE_Y_FACTOR = {"De Planta": 2.0, "Catedratico": 0.5}
 
 class Usuario(ABC):
     def __init__(self,identificacion: str, nombre: str, 
-                 email: str, telefono: str ) -> None:
+                 email: str, telefono: str, canal_notificacion: str) -> None:
 
         if not identificacion or not identificacion.strip():
             raise DatosInvalidosError("La identificacion no puede estar vacia.")
@@ -17,11 +17,15 @@ class Usuario(ABC):
             raise DatosInvalidosError("El email es invalido.")
         if not telefono or not telefono.strip():
             raise DatosInvalidosError("El telefono no puede estar vacio.")
+        if canal_notificacion not in ("email", "sms"):
+            raise DatosInvalidosError(
+                "El canal debe ser 'email' o 'sms'.")
 
         self._identificacion = identificacion.strip()
         self._nombre = nombre.strip()
         self._email = email.strip()
         self._telefono = telefono.strip()
+        self._canal_notificacion = canal_notificacion
         self._multa_pendiente = 0.0
         self._factor_extension = 0.0  # Se asigna en subclases
 
@@ -67,12 +71,16 @@ class Usuario(ABC):
         if valor < 0:
             raise DatosInvalidosError("Las multas no pueden ser negativas.")
         self._multa_pendiente = valor
+
+    @property
+    def canal_notificacion(self) -> str:
+        return self._canal_notificacion
     
 
 class Estudiante(Usuario):
     def __init__(self,identificacion: str, nombre: str, 
-                 email: str, codigo: str,carrera: str,telefono: str) -> None:
-        super().__init__(identificacion, nombre, email, telefono)
+                 email: str, codigo: str,carrera: str,telefono: str, canal_notificacion: str) -> None:
+        super().__init__(identificacion, nombre, email, telefono, canal_notificacion)
 
         if not codigo or not codigo.strip():
             raise DatosInvalidosError("El codigo no puede estar vacio.")
@@ -83,6 +91,7 @@ class Estudiante(Usuario):
         self._codigo = codigo.strip()
         self._carrera = carrera.strip()
         self._factor_extension = FACTOR_EXTENSION_ESTUDIANTE
+        self._canal_notificacion = canal_notificacion
 
     def to_dict(self) -> dict:
         datos = super().to_dict()
@@ -93,15 +102,15 @@ class Estudiante(Usuario):
 
 class Docente(Usuario):
     def __init__(self,identificacion: str,nombre: str,
-                 email: str, telefono: str, tipo: str) -> None:
-        super().__init__(identificacion, nombre, email, telefono)
+                 email: str, telefono: str, tipo: str, canal_notificacion: str) -> None:
+        super().__init__(identificacion, nombre, email, telefono, canal_notificacion)
 
-        if tipo not in TIPOS_DOCENTE:
+        if tipo not in TIPOS_DOCENTE_Y_FACTOR:
             raise DatosInvalidosError(
                 "El tipo de docente debe ser 'De Planta' o 'Catedratico'.")
         
         self._tipo = tipo
-        self._factor_extension = TIPOS_DOCENTE[tipo]
+        self._factor_extension = TIPOS_DOCENTE_Y_FACTOR[tipo]
 
     def to_dict(self) -> dict:
         datos = super().to_dict()
