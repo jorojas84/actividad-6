@@ -1,0 +1,79 @@
+from abc import ABC
+
+from excepciones import DatosInvalidosError
+
+FACTOR_EXTENSION_ESTUDIANTE = 1.0
+TIPOS_DOCENTE = {"De Planta": 2.0, "Catedratico": 0.5}
+
+class Usuario(ABC):
+    def __init__(self,identificacion: str, nombre: str, 
+                 email: str, telefono: str ) -> None:
+
+        if not identificacion or not identificacion.strip():
+            raise DatosInvalidosError("La identificacion no puede estar vacia.")
+        if not nombre or not nombre.strip():
+            raise DatosInvalidosError("El nombre no puede estar vacio.")
+        if not email or "@" not in email:
+            raise DatosInvalidosError("El email es invalido.")
+        if not telefono or not telefono.strip():
+            raise DatosInvalidosError("El telefono no puede estar vacio.")
+
+        self._identificacion = identificacion.strip()
+        self._nombre = nombre.strip()
+        self._email = email.strip()
+        self._telefono = telefono.strip()
+        self._multas_pendientes = 0.0
+        self._factor_extension = None  # Se asigna en subclases
+
+    def to_dict(self) -> dict:
+        return {
+            "tipo": self.__class__.__name__,
+            "identificacion": self._identificacion,
+            "nombre": self._nombre,
+            "email": self._email,
+            "telefono": self._telefono,
+            "multas_pendientes": self._multas_pendientes,
+        }
+
+    def __str__(self) -> str:
+        return f"[{self._identificacion}] {self._nombre} ({self._email})"
+
+
+class Estudiante(Usuario):
+    def __init__(self,identificacion: str, nombre: str, 
+                 email: str, codigo: str,carrera: str,telefono: str) -> None:
+        super().__init__(identificacion, nombre, email, telefono)
+
+        if not codigo or not codigo.strip():
+            raise DatosInvalidosError("El codigo no puede estar vacio.")
+        if not carrera or not carrera.strip():
+            raise DatosInvalidosError("La carrera no puede estar vacia.")
+        
+        
+        self._codigo = codigo.strip()
+        self._carrera = carrera.strip()
+        self._factor_extension = FACTOR_EXTENSION_ESTUDIANTE
+
+    def to_dict(self) -> dict:
+        datos = super().to_dict()
+        datos["codigo"] = self._codigo
+        datos["carrera"] = self._carrera
+        return datos
+
+
+class Docente(Usuario):
+    def __init__(self,identificacion: str,nombre: str,
+                 email: str, telefono: str, tipo: str) -> None:
+        super().__init__(identificacion, nombre, email, telefono)
+
+        if tipo not in TIPOS_DOCENTE:
+            raise DatosInvalidosError(
+                "El tipo de docente debe ser 'De Planta' o 'Catedratico'.")
+        
+        self._tipo = tipo
+        self._factor_extension = TIPOS_DOCENTE[tipo]
+
+    def to_dict(self) -> dict:
+        datos = super().to_dict()
+        datos["tipo"] = self._tipo
+        return datos
