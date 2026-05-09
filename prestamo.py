@@ -10,6 +10,13 @@ from usuario import Usuario
 
 
 class Prestamo:
+    """Representa el prestamo de un recurso a un usuario.
+
+    Calcula la fecha de devolucion esperada aplicando el factor de extension
+    del usuario sobre los dias permitidos del recurso, y controla el estado
+    de devolucion y los dias de retraso.
+    """
+
     def __init__(self,identificador: str,usuario: Usuario,
         recurso: Recurso,fecha_prestamo: date) -> None:
 

@@ -6,7 +6,14 @@ FACTOR_EXTENSION_ESTUDIANTE = 1.0
 TIPOS_DOCENTE_Y_FACTOR = {"De Planta": 2.0, "Catedratico": 0.5}
 
 class Usuario(ABC):
-    def __init__(self,identificacion: str, nombre: str, 
+    """Clase base abstracta para los usuarios de la biblioteca.
+
+    Almacena los datos personales, el canal de notificacion preferido y las
+    multas pendientes. Las subclases definen el factor de extension del
+    plazo de prestamo.
+    """
+
+    def __init__(self,identificacion: str, nombre: str,
                  email: str, telefono: str, canal_notificacion: str) -> None:
 
         if not identificacion or not identificacion.strip():
@@ -78,7 +85,9 @@ class Usuario(ABC):
     
 
 class Estudiante(Usuario):
-    def __init__(self,identificacion: str, nombre: str, 
+    """Usuario tipo estudiante, con codigo y carrera asociados."""
+
+    def __init__(self,identificacion: str, nombre: str,
                  email: str,telefono: str,codigo: str,carrera: str, canal_notificacion: str) -> None:
         super().__init__(identificacion, nombre, email, telefono, canal_notificacion)
 
@@ -100,6 +109,10 @@ class Estudiante(Usuario):
 
 
 class Docente(Usuario):
+    """Usuario tipo docente. El tipo (De Planta o Catedratico) define el
+    factor de extension del plazo de prestamo.
+    """
+
     def __init__(self,identificacion: str,nombre: str,
                  email: str, telefono: str, tipo: str, canal_notificacion: str) -> None:
         super().__init__(identificacion, nombre, email, telefono, canal_notificacion)

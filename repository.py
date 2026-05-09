@@ -11,6 +11,9 @@ from usuario import Usuario
 
 
 class RepositorioBiblioteca:
+    """Persiste las entidades del sistema (recursos, usuarios, prestamos,
+    multas y notificaciones) en archivos JSON dentro de una carpeta dada.
+    """
 
     def __init__(self, carpeta_data: str = "data") -> None:
         os.makedirs(carpeta_data, exist_ok=True)

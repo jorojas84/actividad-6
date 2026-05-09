@@ -10,6 +10,10 @@ from usuario import Usuario
 
 
 class GestorPrestamos:
+    """Coordina el ciclo de vida de los prestamos: creacion, devolucion y
+    consulta. Delega la generacion de multas en un GestorMultas.
+    """
+
     def __init__(self, gestor_multas: GestorMultas) -> None:
         self._prestamos: List[Prestamo] = []
         self._contador = 0

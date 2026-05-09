@@ -7,6 +7,10 @@ from usuario import Usuario
 
 
 class GestorMultas:
+    """Calcula, genera y registra las multas asociadas a los usuarios
+    cuando devuelven un recurso con retraso.
+    """
+
     def __init__(self) -> None:
         self._multas: List[Multa] = []
         self._contador = 0

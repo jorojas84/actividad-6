@@ -5,6 +5,12 @@ from excepciones import DatosInvalidosError
 
 
 class Multa:
+    """Representa una multa generada por la devolucion tardia de un recurso.
+
+    Asocia un usuario con un prestamo y registra el valor adeudado y la
+    fecha en que se genero.
+    """
+
     def __init__(self,identificador: str,usuario_id: str,
                  prestamo_id: str,valor: float,fecha_generacion: date = None,) -> None: # type: ignore
         

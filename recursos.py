@@ -15,6 +15,12 @@ MULTA_DIARIA_AUDIOLIBRO = 1500
 
 
 class Recurso(ABC):
+    """Clase base abstracta para los recursos de la biblioteca.
+
+    Define los atributos comunes (codigo, titulo, autor, disponibilidad) y
+    obliga a las subclases a implementar los dias de prestamo permitidos.
+    """
+
     DIAS_PRESTAMO = 0  # Se define en subclases
     MULTA_DIARIA = 0   # Se define en subclases
     
@@ -73,6 +79,8 @@ class Recurso(ABC):
 
 
 class Libro(Recurso):
+    """Recurso tipo libro, con un numero de paginas asociado."""
+
     DIAS_PRESTAMO = DIAS_PRESTAMO_LIBRO
     MULTA_DIARIA = MULTA_DIARIA_LIBRO
 
@@ -99,6 +107,8 @@ class Libro(Recurso):
 
 
 class Revista(Recurso):
+    """Recurso tipo revista, identificado por su numero de edicion."""
+
     DIAS_PRESTAMO = DIAS_PRESTAMO_REVISTA
     MULTA_DIARIA = MULTA_DIARIA_REVISTA
 
@@ -123,6 +133,8 @@ class Revista(Recurso):
 
 
 class AudioLibro(Recurso):
+    """Recurso tipo audiolibro, con duracion expresada en minutos."""
+
     DIAS_PRESTAMO = DIAS_PRESTAMO_AUDIOLIBRO
     MULTA_DIARIA = MULTA_DIARIA_AUDIOLIBRO
 

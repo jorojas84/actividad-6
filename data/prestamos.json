@@ -3,8 +3,8 @@
     "identificador": "P0002",
     "usuario_id": "2001",
     "recurso_codigo": "R001",
-    "fecha_prestamo": "2026-05-08",
-    "fecha_devolucion_esperada": "2026-05-22",
+    "fecha_prestamo": "2026-05-09",
+    "fecha_devolucion_esperada": "2026-05-23",
     "fecha_devolucion_real": null,
     "devuelto": false
   },
@@ -12,8 +12,8 @@
     "identificador": "P0003",
     "usuario_id": "1001",
     "recurso_codigo": "A001",
-    "fecha_prestamo": "2026-04-08",
-    "fecha_devolucion_esperada": "2026-05-08",
+    "fecha_prestamo": "2026-04-09",
+    "fecha_devolucion_esperada": "2026-05-09",
     "fecha_devolucion_real": null,
     "devuelto": false
   },
@@ -21,9 +21,9 @@
     "identificador": "P0001",
     "usuario_id": "1001",
     "recurso_codigo": "L001",
-    "fecha_prestamo": "2026-04-18",
-    "fecha_devolucion_esperada": "2026-05-03",
-    "fecha_devolucion_real": "2026-05-08",
+    "fecha_prestamo": "2026-04-19",
+    "fecha_devolucion_esperada": "2026-05-04",
+    "fecha_devolucion_real": "2026-05-09",
     "devuelto": true
   }
 ]
