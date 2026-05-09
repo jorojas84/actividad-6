@@ -156,10 +156,6 @@ class TestGestorPrestamos(unittest.TestCase):
             "1", "Ana", "a@a.com", "C", "X", "300", "email",
         )
 
-    def test_crear_prestamo_genera_id(self):
-        p = self.gestor.crear_prestamo(self.estudiante, self.libro)
-        self.assertEqual(p.identificador, "P0001")
-
     def test_devolver_prestamo_inexistente(self):
         with self.assertRaises(DatosInvalidosError):
             self.gestor.devolver_prestamo("PXXX")

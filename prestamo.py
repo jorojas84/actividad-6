@@ -1,6 +1,7 @@
 from datetime import date, timedelta
 
 from excepciones import (
+    DatosInvalidosError,
     PrestamoYaDevueltoError,
     RecursoNoDisponibleError,
     UsuarioConMultasError,

@@ -14,10 +14,10 @@ class GestorPrestamos:
     consulta. Delega la generacion de multas en un GestorMultas.
     """
 
-    def __init__(self, gestor_multas: GestorMultas) -> None:
+    def __init__(self, gestor_multas: Optional[GestorMultas] = None) -> None:
         self._prestamos: List[Prestamo] = []
         self._contador = 0
-        self._gestor_multas = gestor_multas
+        self._gestor_multas = gestor_multas or GestorMultas()
 
     def crear_prestamo(self,usuario: Usuario,
                        recurso: Recurso,
